@@ -1,0 +1,31 @@
+{
+    "Pins": [
+        {
+            "Title": "First",
+            "Description": "Description.",
+            "ImagePath": "Images/EiffelTower.png",
+            "Position": {
+                "x": 100.0,
+                "y": 200.0
+            }
+        },
+        {
+            "Title": "Second",
+            "Description": "Description.",
+            "ImagePath": "Images/GrandCanyon.png",
+            "Position": {
+                "x": 300.0,
+                "y": 400.0
+            }
+        },
+        {
+            "Title": "Third",
+            "Description": "Description.",
+            "ImagePath": "Images/KrutogorieReserve.png",
+            "Position": {
+                "x": 500.0,
+                "y": 600.0
+            }
+        }
+    ]
+}
