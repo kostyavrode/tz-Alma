@@ -19,7 +19,9 @@ public class MapViewModel
 
     public void OnMapClicked(Vector2 pos)
     {
-        ServiceLocator.GetService<MapHelperService>().InstantiateCreatePanel();
+        MapHelperService mapHelperService = ServiceLocator.GetService<MapHelperService>();
+        mapHelperService.InstantiateCreatePanel();
+        mapHelperService.PinSpawnPoint = pos;
     }
 
     public void RemovePin(PinViewModel pin)

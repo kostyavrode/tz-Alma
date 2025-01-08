@@ -15,6 +15,8 @@ public class MapHelperService : MonoBehaviour
         ServiceLocator.RegisterService(this);
     }
 
+    public Vector2 PinSpawnPoint { get; set; }
+
     public void StartService()
     {
         var pinService = new PinService();

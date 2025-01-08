@@ -20,12 +20,11 @@ public class PinCreationView : MonoBehaviour
     private void BindViewModel()
     {
         confirmButton.onClick.AddListener(CreateButtonClicked);
-        cancelButton.onClick.AddListener(() => gameObject.SetActive(false));
+        cancelButton.onClick.AddListener(() => Destroy(gameObject));
     }
 
     private void CreateButtonClicked()
     {
-        Debug.Log("Pin created");
-        viewModel.CreatePin(titleInput.text, descriptionInput.text);
+        viewModel.CreatePin(titleInput.text, descriptionInput.text,ServiceLocator.GetService<MapHelperService>().PinSpawnPoint);
     }
 }

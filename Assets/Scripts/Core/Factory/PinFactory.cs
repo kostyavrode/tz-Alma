@@ -24,8 +24,6 @@ public class PinFactory
         PinView pinView = pinObject.GetComponent<PinView>();
         pinView.SetViewModel(pinViewModel);
 
-        Debug.Log("Create Pin");
-
         return pinViewModel;
     }
 

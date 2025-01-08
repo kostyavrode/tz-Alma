@@ -4,17 +4,14 @@ using UnityEngine;
 
 public class PinCreationViewModel
 {
-    public void CreatePin(string title, string description)
+    public void CreatePin(string title, string description, Vector2 pos)
     {
-        Debug.Log("Craete pin");
-        Vector2 mousePosition = Input.mousePosition;
-        Vector2 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
 
         PinModel newPin = new PinModel
         {
             Title = title,
             Description = description,
-            Position = worldPosition,
+            Position = pos,
             ImagePath = ""
         };
 

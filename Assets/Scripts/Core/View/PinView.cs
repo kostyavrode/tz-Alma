@@ -15,11 +15,15 @@ public class PinView : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragH
     private Button pinButton;
 
     private PinViewModel viewModel;
-    
-    private Vector2 initialPosition;
+
+    private Vector2 offset;
+
     private bool isDragging = false;
+
     private PinsEditService dragModeService;
 
+    private RectTransform rect;
+    
     private void Start()
     {
 
@@ -72,6 +76,7 @@ public class PinView : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragH
 
     public void OnPinClicked()
     {
+        if (!isDragging)
         viewModel.PinClicked();
     }
 
@@ -89,15 +94,35 @@ public class PinView : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragH
         if (!dragModeService.IsDragModeActive()) return;
 
         isDragging = true;
-        initialPosition = transform.position;
+
+        if (!rect)
+        {
+            rect = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
+        }
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            rect,
+            Input.mousePosition,
+            eventData.pressEventCamera,
+            out Vector2 localMousePosition
+        );
+
+        offset = (Vector2)transform.localPosition - localMousePosition;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         if (!isDragging) return;
 
-        Vector2 newPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        transform.position = newPosition;
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+             rect,
+             Input.mousePosition,
+             eventData.pressEventCamera,
+             out Vector2 localMousePosition
+         );
+
+        transform.localPosition = localMousePosition + offset;
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -106,5 +131,6 @@ public class PinView : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragH
 
         isDragging = false;
         UpdatePinPosition();
+        
     }
 }
