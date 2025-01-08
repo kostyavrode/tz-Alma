@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,26 +9,30 @@ using UnityEngine;
 public class PinViewModel : INotifyPropertyChanged
 {
 
-    private PinModel _pinModel;
+    public Action onPinDeleted;
+
+    private PinModel pinModel;
+
+    private PinsEditService pinsEditService;
 
     public PinViewModel(PinModel pinModel)
     {
-        _pinModel = pinModel;
+        this.pinModel = pinModel;
     }
 
     public PinModel PinModel
     {
-        get { return _pinModel; }
+        get { return pinModel; }
     }
 
     public string Title
     {
-        get => _pinModel.Title;
+        get => pinModel.Title;
         set
         {
-            if (_pinModel.Title != value)
+            if (pinModel.Title != value)
             {
-                _pinModel.Title = value;
+                pinModel.Title = value;
                 OnPropertyChanged(nameof(Title));
             }
         }
@@ -35,12 +40,12 @@ public class PinViewModel : INotifyPropertyChanged
 
     public string Description
     {
-        get => _pinModel.Description;
+        get => pinModel.Description;
         set
         {
-            if (_pinModel.Description != value)
+            if (pinModel.Description != value)
             {
-                _pinModel.Description = value;
+                pinModel.Description = value;
                 OnPropertyChanged(nameof(Description));
             }
         }
@@ -48,12 +53,12 @@ public class PinViewModel : INotifyPropertyChanged
 
     public string ImagePath
     {
-        get => _pinModel.ImagePath;
+        get => pinModel.ImagePath;
         set
         {
-            if (_pinModel.ImagePath != value)
+            if (pinModel.ImagePath != value)
             {
-                _pinModel.ImagePath = value;
+                pinModel.ImagePath = value;
                 OnPropertyChanged(nameof(ImagePath));
             }
         }
@@ -61,18 +66,18 @@ public class PinViewModel : INotifyPropertyChanged
 
     public Vector2 Position
     {
-        get => _pinModel.Position;
+        get => pinModel.Position;
         set
         {
-            if (_pinModel.Position != value)
+            if (pinModel.Position != value)
             {
-                _pinModel.Position = value;
+                pinModel.Position = value;
                 OnPropertyChanged(nameof(Position));
             }
         }
     }
 
-    public Sprite PinSprite => LoadSprite(_pinModel.ImagePath);
+    public Sprite PinSprite => LoadSprite(pinModel.ImagePath);
 
     private Sprite LoadSprite(string path)
     {
@@ -85,13 +90,35 @@ public class PinViewModel : INotifyPropertyChanged
 
     public void UpdatePosition()
     {
-        Debug.Log(_pinModel.Position);
+        Debug.Log(pinModel.Position);
         ServiceLocator.GetService<PinService>().SavePin(this.PinModel);
+    }
+
+    public void PinClicked()
+    {
+        if (!pinsEditService)
+        {
+            pinsEditService = ServiceLocator.GetService<PinsEditService>();
+        }
+        if (pinsEditService.IsDeletingModeActive())
+        {
+            ServiceLocator.GetService<PinService>().DeletePin(this);
+            DeletePin();
+        }
+        else
+        {
+            ShowFullDetails();
+        }
     }
 
     public void ShowFullDetails()
     {
         ServiceLocator.GetService<ShowPinFullDetailsService>().ShowDetails(this);
+    }
+
+    public void DeletePin()
+    {
+        onPinDeleted?.Invoke();
     }
 
     public event PropertyChangedEventHandler PropertyChanged;

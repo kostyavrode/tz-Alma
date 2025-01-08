@@ -18,13 +18,21 @@ public class PinView : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragH
     
     private Vector2 initialPosition;
     private bool isDragging = false;
-    private DragModeService dragModeService;
+    private PinsEditService dragModeService;
 
     private void Start()
     {
+
+        viewModel.onPinDeleted += DeleteSelf;
+
         pinButton = GetComponent<Button>();
         pinButton.onClick.AddListener(OnPinClicked);
-        dragModeService = ServiceLocator.GetService<DragModeService>();
+        dragModeService = ServiceLocator.GetService<PinsEditService>();
+    }
+
+    private void OnDisable()
+    {
+        viewModel.onPinDeleted -= DeleteSelf;
     }
 
     public void SetViewModel(PinViewModel vm)
@@ -57,9 +65,14 @@ public class PinView : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragH
         return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
     }
 
+    private void DeleteSelf()
+    {
+        Destroy(gameObject);
+    }
+
     public void OnPinClicked()
     {
-        viewModel.ShowFullDetails();
+        viewModel.PinClicked();
     }
 
     private void UpdatePinPosition()

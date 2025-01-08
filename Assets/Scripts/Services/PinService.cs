@@ -35,10 +35,27 @@ public class PinService
 
     public void SavePins()
     {
-        string jsonPath = Path.Combine(Application.dataPath, "Resources", "pins.json");
+        string jsonPath = Path.Combine(Application.persistentDataPath, "pins.json");
         string json = JsonConvert.SerializeObject(pinList, Formatting.Indented);
         File.WriteAllText(jsonPath, json);
         Debug.Log("Pins saved to: " + jsonPath);
+    }
+
+    public void DeletePin(PinViewModel pinToDelete)
+    {
+        PinModel pin = pinList.pins.Find(p => p.Title == pinToDelete.Title && p.Position == pinToDelete.Position);
+
+        if (pin != null)
+        {
+            pinList.pins.Remove(pin);
+            pinToDelete.DeletePin();
+            SavePins();
+            Debug.Log($"Pin '{pin.Title}' deleted and saved.");
+        }
+        else
+        {
+            Debug.LogWarning("Pin not found for deletion.");
+        }
     }
 
     public PinListModel LoadPins()

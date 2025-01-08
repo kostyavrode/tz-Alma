@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DragModeService : MonoBehaviour
+public class PinsEditService : MonoBehaviour
 {
     private bool isDragModeActive = true;
-
+    
+    private bool isDeletingModeActive=true;
     private void Awake()
     {
         ServiceLocator.RegisterService(this);
@@ -20,5 +21,15 @@ public class DragModeService : MonoBehaviour
     public bool IsDragModeActive()
     {
         return isDragModeActive;
+    }
+
+    public void ToggleDeleteMode()
+    {
+        isDeletingModeActive = !isDeletingModeActive;
+    }
+
+    public bool IsDeletingModeActive()
+    {
+        return isDeletingModeActive;
     }
 }
