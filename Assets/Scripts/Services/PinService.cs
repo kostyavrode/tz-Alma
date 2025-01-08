@@ -41,6 +41,12 @@ public class PinService
         Debug.Log("Pins saved to: " + jsonPath);
     }
 
+    public void AddPin(PinModel pinData)
+    {
+        pinList.pins.Add(pinData);
+        SavePins();
+    }
+
     public void DeletePin(PinViewModel pinToDelete)
     {
         PinModel pin = pinList.pins.Find(p => p.Title == pinToDelete.Title && p.Position == pinToDelete.Position);
@@ -71,14 +77,12 @@ public class PinService
         }
         else
         {
-            // Загружаем из Resources при первом запуске
             TextAsset jsonFile = Resources.Load<TextAsset>(FileName);
             if (jsonFile != null)
             {
                 Debug.Log("Loaded pins from Resources.");
                 var pinList = JsonConvert.DeserializeObject<PinListModel>(jsonFile.text);
 
-                // Сохраняем копию в persistentDataPath
                 SavePinsToFile(pinList);
                 this.pinList = pinList;
                 return pinList;
@@ -86,7 +90,7 @@ public class PinService
             else
             {
                 Debug.LogWarning("Pin data not found in Resources or persistentDataPath.");
-                return new PinListModel(); // Пустая модель, если данных нет
+                return new PinListModel();
             }
         }
     }

@@ -292,6 +292,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pinPrefab: {fileID: 1475336128887970299, guid: 23c966f2279129e4d9b6a3b6ac7879ad, type: 3}
+  pinCreationViewPrefab: {fileID: 5322058135166942521, guid: 3e74e45b2ff79e440b67c0172a51a34b, type: 3}
 --- !u!1 &388782283
 GameObject:
   m_ObjectHideFlags: 0

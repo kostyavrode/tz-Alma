@@ -4,7 +4,7 @@ public class Bootstrapper : MonoBehaviour
 {
     [SerializeField] private UIFactory uiFactory;
     [SerializeField] private Transform uiParent;
-    [SerializeField] private MapInitializeService mapInitializeService;
+    [SerializeField] private MapHelperService mapInitializeService;
     [SerializeField] private MapView mapView;
 
     private PinService pinService;

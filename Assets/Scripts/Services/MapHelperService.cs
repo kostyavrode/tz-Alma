@@ -2,12 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapInitializeService : MonoBehaviour
+public class MapHelperService : MonoBehaviour
 {
     [SerializeField] private GameObject pinPrefab;
+    [SerializeField] private PinCreationView pinCreationViewPrefab;
     private Transform pinContainer;
     private MapView mapView;
-    private ShowPinFullDetailsService pinDetailsView;
+    private PinCreationView pinCreationView;
+
+    private void Awake()
+    {
+        ServiceLocator.RegisterService(this);
+    }
 
     public void StartService()
     {
@@ -37,8 +43,16 @@ public class MapInitializeService : MonoBehaviour
     {
         this.mapView = mapView;
     }
-    public void SetPinDetailsView(ShowPinFullDetailsService pinDetailsView)
+
+    public void InstantiateCreatePanel()
     {
-        this.pinDetailsView=pinDetailsView;
+        PinCreationViewModel pinCreationViewModel = new PinCreationViewModel();
+
+        pinCreationView = Instantiate(pinCreationViewPrefab);
+        pinCreationView.transform.parent = mapView.transform.parent;
+        pinCreationView.transform.localScale = Vector3.one;
+        pinCreationView.transform.localPosition=Vector3.zero;
+
+        pinCreationView.SetViewModel(pinCreationViewModel);
     }
 }

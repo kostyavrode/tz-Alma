@@ -10,6 +10,8 @@ public class PinFactory
     {
         pinPrefab = prefab;
         pinContainer = container;
+
+        ServiceLocator.RegisterService(this);
     }
 
     public PinViewModel CreatePin(PinModel pinModel)
@@ -22,10 +24,14 @@ public class PinFactory
         PinView pinView = pinObject.GetComponent<PinView>();
         pinView.SetViewModel(pinViewModel);
 
+        Debug.Log("Create Pin");
+
         return pinViewModel;
     }
-    public void SetPinDetailsView(ShowPinFullDetailsService pinDetailsView)
+
+    public void CreateNewPin(PinModel pinModel)
     {
-        this.pinDetailsView=pinDetailsView;
+        ServiceLocator.GetService<PinService>().AddPin(pinModel);
+        CreatePin(pinModel);
     }
 }

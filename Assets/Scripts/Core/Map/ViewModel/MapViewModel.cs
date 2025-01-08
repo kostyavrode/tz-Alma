@@ -17,6 +17,11 @@ public class MapViewModel
         Pins.Add(newPin);
     }
 
+    public void OnMapClicked(Vector2 pos)
+    {
+        ServiceLocator.GetService<MapHelperService>().InstantiateCreatePanel();
+    }
+
     public void RemovePin(PinViewModel pin)
     {
         Pins.Remove(pin);
