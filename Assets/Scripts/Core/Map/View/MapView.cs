@@ -8,14 +8,7 @@ public class MapView : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        //if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
-        //        mapRectTransform,
-        //        eventData.position,
-        //        eventData.pressEventCamera,
-        //        out Vector2 localPoint))
-        //{
-        //    mapViewModel.AddPin(localPoint);
-        //}
+
     }
 
     public void SetViewModel(MapViewModel vm)

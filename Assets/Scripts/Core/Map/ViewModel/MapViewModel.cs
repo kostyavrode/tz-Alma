@@ -11,9 +11,9 @@ public class MapViewModel
         pinFactory = factory;
     }
 
-    public void AddPin(Vector2 position)
+    public void AddPin(PinDataModel pinData)
     {
-        PinViewModel newPin = pinFactory.CreatePin(position);
+        PinViewModel newPin = pinFactory.CreatePin(pinData);
         Pins.Add(newPin);
     }
 

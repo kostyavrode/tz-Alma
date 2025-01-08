@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -12,6 +13,11 @@ public class PinViewModel : INotifyPropertyChanged
     private Vector2 position;
     private Sprite pinSprite;
 
+    public PinDetailsView PinDetailsView 
+    { 
+        get;
+        set;
+    }
     public string Title
     {
         get => title;
@@ -60,6 +66,33 @@ public class PinViewModel : INotifyPropertyChanged
             pinSprite = value;
             OnPropertyChanged(nameof(PinSprite));
         }
+    }
+
+    public PinDataModel ToDataModel()
+    {
+        return new PinDataModel
+        {
+            Title = title,
+            Description = description,
+            ImagePath = imagePath,
+            Position = position
+        };
+    }
+
+    private void LoadPinSprite()
+    {
+        if (!string.IsNullOrEmpty(imagePath) && File.Exists(imagePath))
+        {
+            byte[] fileData = File.ReadAllBytes(imagePath);
+            Texture2D texture = new Texture2D(2, 2);
+            texture.LoadImage(fileData);
+            PinSprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+        }
+    }
+    public void ShowFullDetails()
+    {
+        PinDetailsView.ShowDetails(this);
+        
     }
 
     public event PropertyChangedEventHandler PropertyChanged;

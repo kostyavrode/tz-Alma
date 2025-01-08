@@ -5,33 +5,37 @@ using UnityEngine;
 public class MapInitializeService : MonoBehaviour
 {
     [SerializeField] private GameObject pinPrefab;
-    [SerializeField] private Transform pinContainer;
-    [SerializeField] private MapView mapView;
+    private Transform pinContainer;
+    private MapView mapView;
+    private PinDetailsView pinDetailsView;
 
-    private void Start()
+    public void StartService()
     {
-        var pinServie = new PinService();
+        var pinService = new PinService();
         var pinFactory = new PinFactory(pinPrefab, pinContainer);
+        pinFactory.SetPinDetailsView(pinDetailsView);
         var mapViewModel = new MapViewModel(pinFactory);
 
-        PinListModel savedPins = pinServie.LoadPins();
-        Debug.Log("Saved Pins"+savedPins.pins.Count);
+        PinListModel savedPins = pinService.LoadPins();
+
         foreach (var pinData in savedPins.pins)
         {
-            PinViewModel pinViewModel = new PinViewModel
-            {
-                Title = pinData.Title,
-                Description = pinData.Description,
-                Position = pinData.Position,
-            };
-            mapViewModel.Pins.Add(pinViewModel);
-
-            var pinObject = pinFactory.CreatePin(pinData.Position);
-            Debug.Log("Create Pin in:" + pinData.Position);
-            pinObject.Title = pinData.Title;
-            pinObject.Description = pinData.Description;
+            mapViewModel.AddPin(pinData);
         }
 
         mapView.SetViewModel(mapViewModel);
+        
+    }
+    public void SetPinContainer(Transform container)
+    {
+        pinContainer=container;
+    }
+    public void SetMapView(MapView mapView)
+    {
+        this.mapView = mapView;
+    }
+    public void SetPinDetailsView(PinDetailsView pinDetailsView)
+    {
+        this.pinDetailsView=pinDetailsView;
     }
 }
