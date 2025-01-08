@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [System.Serializable]
-public class PinDataModel
+public class PinModel
 {
     public string Title;
     public string Description;

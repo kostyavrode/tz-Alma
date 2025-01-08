@@ -3,5 +3,5 @@ using UnityEngine;
 
 public class PinListModel
 {
-    public List<PinDataModel> pins;
+    public List<PinModel> pins;
 }

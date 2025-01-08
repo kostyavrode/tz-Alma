@@ -3,9 +3,9 @@ using UnityEngine.UI;
 using TMPro;
 using static UnityEditor.Profiling.HierarchyFrameDataView;
 
-public class PinDetailsView : MonoBehaviour
+public class ShowPinFullDetailsService : MonoBehaviour
 {
-
+    [SerializeField] private GameObject panel;
     [SerializeField] private TMP_InputField titleInputField;
     [SerializeField] private TMP_InputField descriptionInputField;
     [SerializeField] private Image pinImage;
@@ -14,10 +14,11 @@ public class PinDetailsView : MonoBehaviour
     private PinViewModel pinViewModel;
     private PinService pinService;
 
-    private void Start()
+    private void Awake()
     {
+        ServiceLocator.RegisterService(this);
         closeButton.onClick.AddListener(CloseDetails);
-        gameObject.SetActive(false);
+        panel.SetActive(false);
     }
 
     public void ShowDetails(PinViewModel viewModel)
@@ -26,7 +27,7 @@ public class PinDetailsView : MonoBehaviour
         titleInputField.text = viewModel.Title;
         descriptionInputField.text = viewModel.Description;
         pinImage.sprite = viewModel.PinSprite;
-        gameObject.SetActive(true);
+        panel.SetActive(true);
     }
 
     public void CloseDetails()
@@ -34,9 +35,9 @@ public class PinDetailsView : MonoBehaviour
 
         pinViewModel.Title = titleInputField.text;
         pinViewModel.Description = descriptionInputField.text;
-        Debug.Log(pinService);
-        pinService.SavePin(pinViewModel.ToDataModel());
-        gameObject.SetActive(false);
+
+        ServiceLocator.GetService<PinService>().SavePin(pinViewModel.PinModel);
+        panel.SetActive(false);
 
     }
 

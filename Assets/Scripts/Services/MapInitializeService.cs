@@ -7,13 +7,16 @@ public class MapInitializeService : MonoBehaviour
     [SerializeField] private GameObject pinPrefab;
     private Transform pinContainer;
     private MapView mapView;
-    private PinDetailsView pinDetailsView;
+    private ShowPinFullDetailsService pinDetailsView;
 
     public void StartService()
     {
         var pinService = new PinService();
+        pinService.Init();
+
         var pinFactory = new PinFactory(pinPrefab, pinContainer);
-        pinFactory.SetPinDetailsView(pinDetailsView);
+
+
         var mapViewModel = new MapViewModel(pinFactory);
 
         PinListModel savedPins = pinService.LoadPins();
@@ -34,7 +37,7 @@ public class MapInitializeService : MonoBehaviour
     {
         this.mapView = mapView;
     }
-    public void SetPinDetailsView(PinDetailsView pinDetailsView)
+    public void SetPinDetailsView(ShowPinFullDetailsService pinDetailsView)
     {
         this.pinDetailsView=pinDetailsView;
     }

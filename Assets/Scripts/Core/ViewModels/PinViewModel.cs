@@ -7,92 +7,91 @@ using UnityEngine;
 
 public class PinViewModel : INotifyPropertyChanged
 {
-    private string title;
-    private string description;
-    private string imagePath;
-    private Vector2 position;
-    private Sprite pinSprite;
 
-    public PinDetailsView PinDetailsView 
-    { 
-        get;
-        set;
+    private PinModel _pinModel;
+
+    public PinViewModel(PinModel pinModel)
+    {
+        _pinModel = pinModel;
     }
+
+    public PinModel PinModel
+    {
+        get { return _pinModel; }
+    }
+
     public string Title
     {
-        get => title;
+        get => _pinModel.Title;
         set
         {
-            title = value;
-            OnPropertyChanged(nameof(Title));
+            if (_pinModel.Title != value)
+            {
+                _pinModel.Title = value;
+                OnPropertyChanged(nameof(Title));
+            }
         }
     }
 
     public string Description
     {
-        get => description;
+        get => _pinModel.Description;
         set
         {
-            description = value;
-            OnPropertyChanged(nameof(Description));
+            if (_pinModel.Description != value)
+            {
+                _pinModel.Description = value;
+                OnPropertyChanged(nameof(Description));
+            }
         }
     }
 
     public string ImagePath
     {
-        get => imagePath;
+        get => _pinModel.ImagePath;
         set
         {
-            imagePath = value;
-            OnPropertyChanged(nameof(ImagePath));
+            if (_pinModel.ImagePath != value)
+            {
+                _pinModel.ImagePath = value;
+                OnPropertyChanged(nameof(ImagePath));
+            }
         }
     }
 
     public Vector2 Position
     {
-        get => position;
+        get => _pinModel.Position;
         set
         {
-            position = value;
-            OnPropertyChanged(nameof(Position));
+            if (_pinModel.Position != value)
+            {
+                _pinModel.Position = value;
+                OnPropertyChanged(nameof(Position));
+            }
         }
     }
 
-    public Sprite PinSprite
+    public Sprite PinSprite => LoadSprite(_pinModel.ImagePath);
+
+    private Sprite LoadSprite(string path)
     {
-        get => pinSprite;
-        set
-        {
-            pinSprite = value;
-            OnPropertyChanged(nameof(PinSprite));
-        }
+        if (string.IsNullOrEmpty(path) || !File.Exists(path)) return null;
+        byte[] fileData = File.ReadAllBytes(path);
+        Texture2D texture = new Texture2D(2, 2);
+        texture.LoadImage(fileData);
+        return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
     }
 
-    public PinDataModel ToDataModel()
+    public void UpdatePosition()
     {
-        return new PinDataModel
-        {
-            Title = title,
-            Description = description,
-            ImagePath = imagePath,
-            Position = position
-        };
+        Debug.Log(_pinModel.Position);
+        ServiceLocator.GetService<PinService>().SavePin(this.PinModel);
     }
 
-    private void LoadPinSprite()
-    {
-        if (!string.IsNullOrEmpty(imagePath) && File.Exists(imagePath))
-        {
-            byte[] fileData = File.ReadAllBytes(imagePath);
-            Texture2D texture = new Texture2D(2, 2);
-            texture.LoadImage(fileData);
-            PinSprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
-        }
-    }
     public void ShowFullDetails()
     {
-        PinDetailsView.ShowDetails(this);
-        
+        ServiceLocator.GetService<ShowPinFullDetailsService>().ShowDetails(this);
     }
 
     public event PropertyChangedEventHandler PropertyChanged;

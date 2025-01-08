@@ -4,7 +4,7 @@ public class PinFactory
 {
     private GameObject pinPrefab;
     private Transform pinContainer;
-    private PinDetailsView pinDetailsView;
+    private ShowPinFullDetailsService pinDetailsView;
 
     public PinFactory(GameObject prefab, Transform container)
     {
@@ -12,26 +12,19 @@ public class PinFactory
         pinContainer = container;
     }
 
-    public PinViewModel CreatePin(PinDataModel pinData)
+    public PinViewModel CreatePin(PinModel pinModel)
     {
         GameObject pinObject = Object.Instantiate(pinPrefab, pinContainer);
-        pinObject.GetComponent<RectTransform>().anchoredPosition = pinData.Position;
+        pinObject.GetComponent<RectTransform>().anchoredPosition = pinModel.Position;
 
-        PinViewModel pinViewModel = new PinViewModel
-        {
-            Title = pinData.Title,
-            Description = pinData.Description,
-            Position = pinData.Position,
-            PinDetailsView = pinDetailsView
-        };
-
+        PinViewModel pinViewModel = new PinViewModel(pinModel);
         
         PinView pinView = pinObject.GetComponent<PinView>();
         pinView.SetViewModel(pinViewModel);
 
         return pinViewModel;
     }
-    public void SetPinDetailsView(PinDetailsView pinDetailsView)
+    public void SetPinDetailsView(ShowPinFullDetailsService pinDetailsView)
     {
         this.pinDetailsView=pinDetailsView;
     }

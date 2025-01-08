@@ -8,59 +8,74 @@ public class PinService
 {
     private const string FileName = "pins";
 
-    private string savePath;
+    private PinListModel pinList;
 
-    public void SavePin(PinDataModel pinData)
+    public void Init()
     {
-        // Загружаем текущий список пинов
-        var pinList = LoadPins();
-
-        // Находим и обновляем соответствующий пин
+        ServiceLocator.RegisterService(this);
+    }
+    public void SavePin(PinModel pinData)
+    { 
         var existingPin = pinList.pins.Find(p => p.Position == pinData.Position);
         if (existingPin != null)
         {
             existingPin.Title = pinData.Title;
             existingPin.Description = pinData.Description;
             existingPin.ImagePath = pinData.ImagePath;
+            existingPin.Position = pinData.Position;
+            Debug.Log(existingPin.Position);
         }
         else
         {
             pinList.pins.Add(pinData);
         }
 
-        // Сохраняем обновленный список
         SavePinsToFile(pinList);
+    }
+
+    public void SavePins()
+    {
+        string jsonPath = Path.Combine(Application.dataPath, "Resources", "pins.json");
+        string json = JsonConvert.SerializeObject(pinList, Formatting.Indented);
+        File.WriteAllText(jsonPath, json);
+        Debug.Log("Pins saved to: " + jsonPath);
     }
 
     public PinListModel LoadPins()
     {
+        string jsonPath = Path.Combine(Application.persistentDataPath, $"{FileName}.json");
 
-        savePath = Application.persistentDataPath + "/pins.json";
-
-        TextAsset jsonFile = Resources.Load<TextAsset>(FileName);
-        if (jsonFile != null)
+        if (File.Exists(jsonPath))
         {
-            try
-            {
-                // Десериализация JSON с помощью Newtonsoft.Json
-                return JsonConvert.DeserializeObject<PinListModel>(jsonFile.text);
-            }
-            catch (JsonException e)
-            {
-                Debug.LogError($"Ошибка при десериализации файла pins.json: {e.Message}");
-                return new PinListModel();
-            }
+            string json = File.ReadAllText(jsonPath);
+            Debug.Log("Loaded pins from: " + jsonPath);
+            pinList = JsonConvert.DeserializeObject<PinListModel>(json);
+            return pinList;
         }
-
         else
         {
-            Debug.LogWarning("Файл pins.json не найден в папке Resources!");
-            return new PinListModel();
+            // Загружаем из Resources при первом запуске
+            TextAsset jsonFile = Resources.Load<TextAsset>(FileName);
+            if (jsonFile != null)
+            {
+                Debug.Log("Loaded pins from Resources.");
+                var pinList = JsonConvert.DeserializeObject<PinListModel>(jsonFile.text);
+
+                // Сохраняем копию в persistentDataPath
+                SavePinsToFile(pinList);
+                this.pinList = pinList;
+                return pinList;
+            }
+            else
+            {
+                Debug.LogWarning("Pin data not found in Resources or persistentDataPath.");
+                return new PinListModel(); // Пустая модель, если данных нет
+            }
         }
     }
     private void SavePinsToFile(PinListModel pinList)
     {
-        string jsonPath = Path.Combine(Application.dataPath, "Resources", $"{FileName}.json");
+        string jsonPath = Path.Combine(Application.persistentDataPath, $"{FileName}.json");
         string json = JsonConvert.SerializeObject(pinList, Formatting.Indented);
         File.WriteAllText(jsonPath, json);
         Debug.Log("Pins saved to: " + jsonPath);
