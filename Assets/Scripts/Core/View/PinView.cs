@@ -1,37 +1,48 @@
 using System.IO;
 using TMPro;
-using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class PinView : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
+public class PinView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
     public TMP_Text titleText;
     public TMP_Text descriptionText;
-
     public Image pinImage;
 
     private Button pinButton;
-
     private PinViewModel viewModel;
 
     private Vector2 offset;
-
     private bool isDragging = false;
+    private bool isHoldActive = false;
+    private float holdTimer = 0f;
+    private float holdTime = 0.5f;
+
+    private bool wasDragged = false;
 
     private PinsEditService dragModeService;
-
     private RectTransform rect;
-    
+
     private void Start()
     {
-
         viewModel.onPinDeleted += DeleteSelf;
 
         pinButton = GetComponent<Button>();
         pinButton.onClick.AddListener(OnPinClicked);
         dragModeService = ServiceLocator.GetService<PinsEditService>();
+    }
+
+    private void Update()
+    {
+        if (isHoldActive)
+        {
+            holdTimer += Time.deltaTime;
+            if (holdTimer >= holdTime)
+            {
+                ActivateDragMode();
+            }
+        }
     }
 
     private void OnDisable()
@@ -76,8 +87,12 @@ public class PinView : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragH
 
     public void OnPinClicked()
     {
-        if (!isDragging)
-        viewModel.PinClicked();
+        if (!isDragging && !wasDragged)
+        {
+            viewModel.PinClicked();
+        }
+
+        wasDragged = false;
     }
 
     private void UpdatePinPosition()
@@ -89,11 +104,10 @@ public class PinView : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragH
         viewModel.UpdatePosition();
     }
 
-    public void OnBeginDrag(PointerEventData eventData)
+    public void OnPointerDown(PointerEventData eventData)
     {
-        if (!dragModeService.IsDragModeActive()) return;
-
-        isDragging = true;
+        isHoldActive = true;
+        holdTimer = 0f;
 
         if (!rect)
         {
@@ -110,27 +124,36 @@ public class PinView : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragH
         offset = (Vector2)transform.localPosition - localMousePosition;
     }
 
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        isHoldActive = false;
+        holdTimer = 0f;
+
+        if (isDragging)
+        {
+            isDragging = false;
+            UpdatePinPosition();
+            wasDragged = true;
+        }
+    }
+
     public void OnDrag(PointerEventData eventData)
     {
         if (!isDragging) return;
 
-
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
-             rect,
-             Input.mousePosition,
-             eventData.pressEventCamera,
-             out Vector2 localMousePosition
-         );
+            rect,
+            Input.mousePosition,
+            eventData.pressEventCamera,
+            out Vector2 localMousePosition
+        );
 
         transform.localPosition = localMousePosition + offset;
     }
 
-    public void OnEndDrag(PointerEventData eventData)
+    private void ActivateDragMode()
     {
-        if (!isDragging) return;
-
-        isDragging = false;
-        UpdatePinPosition();
-        
+        isDragging = true;
+        isHoldActive = false;
     }
 }

@@ -107,13 +107,13 @@ public class PinViewModel : INotifyPropertyChanged
         }
         else
         {
-            ShowFullDetails();
+            ShowDetails();
         }
     }
 
-    public void ShowFullDetails()
+    public void ShowDetails()
     {
-        ServiceLocator.GetService<ShowPinFullDetailsService>().ShowDetails(this);
+        ServiceLocator.GetService<ShowPinDetailsService>().ShowDetails(this);
     }
 
     public void DeletePin()

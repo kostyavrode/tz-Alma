@@ -4,7 +4,7 @@ public class PinFactory
 {
     private GameObject pinPrefab;
     private Transform pinContainer;
-    private ShowPinFullDetailsService pinDetailsView;
+    private ShowPinDetailsService pinDetailsView;
 
     public PinFactory(GameObject prefab, Transform container)
     {
