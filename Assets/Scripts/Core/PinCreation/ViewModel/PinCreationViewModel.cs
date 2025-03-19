@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PinCreationViewModel
 {
-    public void CreatePin(string title, string description, Vector2 pos)
+    public void CreatePin(string title, string description, Vector2 pos, string imgPath)
     {
 
         PinModel newPin = new PinModel
@@ -12,7 +12,7 @@ public class PinCreationViewModel
             Title = title,
             Description = description,
             Position = pos,
-            ImagePath = ""
+            ImagePath = imgPath
         };
 
         ServiceLocator.GetService<PinFactory>().CreateNewPin(newPin);

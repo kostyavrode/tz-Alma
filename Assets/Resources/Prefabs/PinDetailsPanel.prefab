@@ -218,7 +218,6 @@ GameObject:
   - component: {fileID: 8721401079834409270}
   - component: {fileID: 6147951947218216518}
   - component: {fileID: 4217896631810478477}
-  - component: {fileID: 8946252058699800525}
   m_Layer: 5
   m_Name: PinDetailsPanel
   m_TagString: Untagged
@@ -289,22 +288,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8946252058699800525
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2100485731339238366}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ceb07e7ef1389e43b5d9d703501cfaf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  titleInputField: {fileID: 5337490204725423124}
-  descriptionInputField: {fileID: 3665673625462235202}
-  pinImage: {fileID: 106926953753148051}
-  closeButton: {fileID: 6647346537189152160}
 --- !u!1 &2193159992936121532
 GameObject:
   m_ObjectHideFlags: 0

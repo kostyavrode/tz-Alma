@@ -15,6 +15,8 @@ public class PinViewModel : INotifyPropertyChanged
 
     private PinsEditService pinsEditService;
 
+    public Sprite PinSprite => LoadSprite(pinModel.ImagePath);
+
     public PinViewModel(PinModel pinModel)
     {
         this.pinModel = pinModel;
@@ -77,15 +79,21 @@ public class PinViewModel : INotifyPropertyChanged
         }
     }
 
-    public Sprite PinSprite => LoadSprite(pinModel.ImagePath);
+    
 
     private Sprite LoadSprite(string path)
     {
-        if (string.IsNullOrEmpty(path) || !File.Exists(path)) return null;
-        byte[] fileData = File.ReadAllBytes(path);
-        Texture2D texture = new Texture2D(2, 2);
-        texture.LoadImage(fileData);
-        return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+        Debug.Log("Loading sprite");
+        if (string.IsNullOrEmpty(path))
+        {
+            path = "Images/Duck";
+        }
+        Sprite sprite = Resources.Load<Sprite>(path);
+        if (sprite == null)
+        {
+            Debug.LogError($"Спрайт по пути '{path}' не найден в папке Resources.");
+        }
+        return sprite;
     }
 
     public void UpdatePosition()

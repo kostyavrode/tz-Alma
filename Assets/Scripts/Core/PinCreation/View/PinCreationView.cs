@@ -25,6 +25,6 @@ public class PinCreationView : MonoBehaviour
 
     private void CreateButtonClicked()
     {
-        viewModel.CreatePin(titleInput.text, descriptionInput.text,ServiceLocator.GetService<MapHelperService>().PinSpawnPoint);
+        viewModel.CreatePin(titleInput.text, descriptionInput.text,ServiceLocator.GetService<MapHelperService>().PinSpawnPoint, "");
     }
 }
